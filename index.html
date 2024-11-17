@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Random</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: #6200ea;
+            color: white;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #3700b3;
+        }
+
+        input[type="number"], input[type="text"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .domain-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            width: 220px;
+        }
+
+        .domain-panel label {
+            margin-bottom: 5px;
+        }
+
+        .custom-domains {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Configuración de Dominios</h2>
+
+    <!-- Casilla de número de sitios a abrir -->
+    <input type="number" id="pageCount" placeholder="Cantidad de páginas" min="1" value="1">
+
+    <!-- Panel de selección de dominios -->
+    <div class="domain-panel">
+        <h3>Dominios predefinidos:</h3>
+        <label><input type="checkbox" class="domain-checkbox" value=".com" checked> .com</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".net" checked> .net</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".org"> .org</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".io" checked> .io</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".is"> .is</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".xyz"> .xyz</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".info"> .info</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".biz"> .biz</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".tech"> .tech</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".ai"> .ai</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".news"> .news</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".store"> .store</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".app"> .app</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".space"> .space</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".club"> .club</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".online"> .online</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".fun"> .fun</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".live"> .live</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".forum"> .forum</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".tv"> .tv</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".game"> .game</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".site"> .site</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".art"> .art</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".media"> .media</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".agency"> .agency</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".design"> .design</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".academy"> .academy</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".solutions"> .solutions</label>
+        <label><input type="checkbox" class="domain-checkbox" value=".network"> .network</label>
+    </div>
+
+    <!-- Campo para dominios personalizados -->
+    <input type="text" id="customDomains" placeholder="Dominios personalizados separados por comas">
+
+    <!-- Botón principal -->
+    <button onclick="redirectMultiple()">Ir a sitios random</button>
+
+    <script>
+        async function redirectMultiple() {
+            const pageCount = document.getElementById('pageCount').value || 1; // Cantidad de páginas a abrir
+            for (let i = 0; i < pageCount; i++) {
+                await delay(500); // Retraso de 500ms entre cada apertura
+                redirectRandom();
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function redirectRandom() {
+            const consonants = 'bcdfghjklmnpqrstvwxyz';
+            const vowels = 'aeiou';
+
+            // Obtener dominios seleccionados
+            const domainCheckboxes = document.querySelectorAll('.domain-checkbox:checked');
+            const selectedDomains = Array.from(domainCheckboxes).map(checkbox => checkbox.value);
+
+            // Agregar dominios personalizados
+            const customDomains = document.getElementById('customDomains').value
+                .split(',')
+                .map(domain => domain.trim())
+                .filter(domain => domain);
+
+            const domains = [...selectedDomains, ...customDomains];
+
+            const blockedDomains = ['godaddy', 'squarespace', 'whois', 'domain', 'namecheap']; // Lista de dominios bloqueados
+
+            let foundValidUrl = false;
+
+            while (!foundValidUrl) {
+                let randomString = '';
+                for (let i = 0; i < 6; i++) {
+                    if (i % 2 === 0) {
+                        randomString += consonants[Math.floor(Math.random() * consonants.length)];
+                    } else {
+                        randomString += vowels[Math.floor(Math.random() * vowels.length)];
+                    }
+                }
+
+                const randomDomain = domains[Math.floor(Math.random() * domains.length)];
+                const randomUrl = `https://www.${randomString}${randomDomain}`;
+
+                if (blockedDomains.some(blocked => randomUrl.includes(blocked))) {
+                    console.log(`Dominio bloqueado: ${randomUrl}, intentando de nuevo...`);
+                    continue;
+                }
+
+                try {
+                    const response = await fetch(randomUrl, { method: 'HEAD', mode: 'no-cors' });
+                    if (response.ok || response.type === 'opaque') {
+                        window.open(randomUrl, '_blank');
+                        foundValidUrl = true;
+                    }
+                } catch {
+                    console.log(`Falló: ${randomUrl}, intentando de nuevo...`);
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
